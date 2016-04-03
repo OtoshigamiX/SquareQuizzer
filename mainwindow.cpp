@@ -27,8 +27,11 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
 
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
-    cur_image= QPixmap(fileName);
+    filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.bmp)"));
+    constIterator=filenames.constBegin();
+    //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+    cur_image= QPixmap(*constIterator);
+    ui->label->setText(*constIterator);
     squareReset();
     redraw();
 }
@@ -118,3 +121,23 @@ void MainWindow::squareTurnOff(int number){
 //            return (MainWindow*) (*i);
 //    return NULL;
 //}
+
+
+
+void MainWindow::on_nextButton_clicked()
+{
+    constIterator = constIterator!=(filenames.constEnd()-1)   ? ++constIterator : filenames.constBegin();
+    cur_image= QPixmap(*constIterator);
+    ui->label->setText(*constIterator);
+    squareReset();
+    redraw();
+}
+
+void MainWindow::on_previousButton_clicked()
+{
+    constIterator = constIterator!=(filenames.constBegin())   ? --constIterator : filenames.constEnd()-1;
+    cur_image= QPixmap(*constIterator);
+    ui->label->setText(*constIterator);
+    squareReset();
+    redraw();
+}

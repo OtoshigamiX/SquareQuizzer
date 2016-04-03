@@ -28,10 +28,15 @@ private slots:
     void on_lineEdit_returnPressed();
 
 
+    void on_nextButton_clicked();
+
+    void on_previousButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
-
+    QStringList filenames;
+    QStringList::const_iterator constIterator;
     QPixmap cur_image;
 
 };
