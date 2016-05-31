@@ -7,14 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>766</width>
-    <height>369</height>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MAGNIFICON2016</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetDefaultConstraint</enum>
+    </property>
     <item>
      <widget class="QGraphicsView" name="graphicsView">
       <property name="sizePolicy">
@@ -52,14 +55,28 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="RevealButton">
+        <property name="text">
+         <string>Odkryj</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Filename</string>
+         <string>Plik:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="pointLabel">
+        <property name="text">
+         <string>Punkty:</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

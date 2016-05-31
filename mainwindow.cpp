@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Sets up the squares (every square is on by default)
-    squareReset();
+    squareReset(true);
 }
 
 MainWindow::~MainWindow()
@@ -32,18 +32,65 @@ void MainWindow::on_pushButton_clicked()
     //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
-    squareReset();
+    squareReset(true);
     redraw();
 }
 
+int MainWindow::countUsedSquares(){
+    int count = 0;
+    for(int i =0;i<SQUARE_X;++i){
+        for(int j=0;j<SQUARE_Y;++j){
+            if(!squares[i][j])
+                ++count;
+        }
+    }
+    return count;
+}
+
+int MainWindow::countUsedMiddleSquares(){
+    int count = 0;
+    for(int i =1;i<SQUARE_X-1;++i){
+        for(int j=1;j<SQUARE_Y-1;++j){
+            if(!squares[i][j])
+                ++count;
+        }
+    }
+    return count;
+}
 
 //This function redraws the whole playground.
 void MainWindow::redraw()
 {
-    QPointer<QGraphicsScene> scene= new QGraphicsScene;
-    scene->addPixmap(cur_image);
+  if(ui->graphicsView->scene()){
+     ui->graphicsView->scene()->clear();
+     ui->graphicsView->scene()->deleteLater();
+  }
+  QPointer<QGraphicsScene> scene= new QGraphicsScene;
+
+     //ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect() );
+    if(!cur_image.isNull())
+        scene->addPixmap(cur_image.scaled(ui->graphicsView->width(),ui->graphicsView->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
+    ui->graphicsView->setRenderHints(QPainter::Antialiasing
+            | QPainter::SmoothPixmapTransform
+            | QPainter::TextAntialiasing);
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio);
+      ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
+
+
+/*
+    QPointer<QGraphicsScene> scene= new QGraphicsScene;
+    if(!cur_image.isNull())
+        scene->addPixmap(cur_image);
+        //scene->addPixmap(cur_image.scaled(ui->graphicsView->scene()->width(),ui->graphicsView->scene()->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
+    ui->graphicsView->setRenderHints(QPainter::Antialiasing
+            | QPainter::SmoothPixmapTransform
+            | QPainter::TextAntialiasing);
+    ui->graphicsView->setScene(scene);
+    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
+*/
+
+    //qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
+    //qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
 
     qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
@@ -70,7 +117,9 @@ void MainWindow::redraw()
             }
         }
     }
-
+    int points = (SQUARE_X*SQUARE_Y/2-(countUsedSquares()/2)*2) - countUsedMiddleSquares();
+    points = points>0 ? points : 1;
+     ui->pointLabel->setText("Punkty:"+QString::number(points));
     ui->graphicsView->show();
 }
 
@@ -84,9 +133,12 @@ void MainWindow::on_lineEdit_returnPressed()
 
 
 
-    if(number>0 && number<=SQUARE_X*SQUARE_Y){ //If number is within correct range, disable correct square and redraw.
-        squareTurnOff(number);
-        //redraw();
+    if(number>0 && number<=filenames.length()){ //If number is within correct range, disable correct square and redraw.
+        constIterator = filenames.begin()+(number-1);
+        cur_image= QPixmap(*constIterator);
+        ui->label->setText(*constIterator);
+        squareReset(true);
+        redraw();
 
     }
     ui->lineEdit->clear(); //Clear lineEdit
@@ -97,10 +149,11 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     redraw();
 }
 
-void MainWindow::squareReset(){
+//This function resets the squares, so they are true or false
+void MainWindow::squareReset(bool type){
     for(int i=0;i<SQUARE_X;i++){
         for(int j=0;j<SQUARE_Y;j++){
-            squares[i][j]=true;
+            squares[i][j]=type;
         }
     }
 }
@@ -129,7 +182,7 @@ void MainWindow::on_nextButton_clicked()
     constIterator = constIterator!=(filenames.constEnd()-1)   ? ++constIterator : filenames.constBegin();
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
-    squareReset();
+    squareReset(true);
     redraw();
 }
 
@@ -138,6 +191,12 @@ void MainWindow::on_previousButton_clicked()
     constIterator = constIterator!=(filenames.constBegin())   ? --constIterator : filenames.constEnd()-1;
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
-    squareReset();
+    squareReset(true);
+    redraw();
+}
+
+void MainWindow::on_RevealButton_clicked()
+{
+    squareReset(false);
     redraw();
 }

@@ -15,14 +15,17 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void squareReset();
+    void squareReset(bool type);
       bool squares[SQUARE_X][SQUARE_Y];
      void squareTurnOff(int number);
 //    static MainWindow* getMainWindow();
     void redraw();
     ~MainWindow();
+    int countUsedSquares();
+    int countUsedMiddleSquares();
 
 private slots:
+
     void on_pushButton_clicked();
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void on_lineEdit_returnPressed();
@@ -31,6 +34,8 @@ private slots:
     void on_nextButton_clicked();
 
     void on_previousButton_clicked();
+
+    void on_RevealButton_clicked();
 
 private:
     Ui::MainWindow *ui;
