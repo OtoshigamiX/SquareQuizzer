@@ -28,6 +28,8 @@ void MainWindow::on_pushButton_clicked()
 {
 
     filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.bmp)"));
+    if(filenames.isEmpty())
+        return;
     constIterator=filenames.constBegin();
     //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
@@ -119,7 +121,9 @@ void MainWindow::redraw()
     }
     int points = (SQUARE_X*SQUARE_Y/2-(countUsedSquares()/2)*2) - countUsedMiddleSquares();
     points = points>0 ? points : 1;
-     ui->pointLabel->setText("Punkty:"+QString::number(points));
+    ui->pointLabel->setText("Punkty:"+QString::number(points));
+    if(points == 1)
+       ui->pointLabel->setStyleSheet("QLabel {color : red; }");
     ui->graphicsView->show();
 }
 
@@ -156,6 +160,7 @@ void MainWindow::squareReset(bool type){
             squares[i][j]=type;
         }
     }
+    ui->pointLabel->setStyleSheet("QLabel {color : black; }");
 }
 
 void MainWindow::squareTurnOff(int number){
