@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <iostream>
 #define SQUARE_X 4
 #define SQUARE_Y 4
 
@@ -23,6 +24,7 @@ public:
     ~MainWindow();
     int countUsedSquares();
     int countUsedMiddleSquares();
+    bool isBlocked(int i, int j);
 
 private slots:
 
@@ -43,6 +45,7 @@ private:
     QStringList filenames;
     QStringList::const_iterator constIterator;
     QPixmap cur_image;
+    QColor cur_color = Qt::black;
 
 };
 

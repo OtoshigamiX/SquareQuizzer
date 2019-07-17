@@ -26,15 +26,21 @@ MainWindow::~MainWindow()
 //and redraw the whole playground.
 void MainWindow::on_pushButton_clicked()
 {
-
+     std::cout << "5" << std::endl;
     filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.bmp)"));
+     std::cout << "6" << std::endl;
     if(filenames.isEmpty())
         return;
+     std::cout << "7" << std::endl;
     constIterator=filenames.constBegin();
+     std::cout << "8" << std::endl;
     //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
+     std::cout << "9" << std::endl;
     ui->label->setText(*constIterator);
+     std::cout << "10" << std::endl;
     squareReset(true);
+     std::cout << "11" << std::endl;
     redraw();
 }
 
@@ -60,6 +66,22 @@ int MainWindow::countUsedMiddleSquares(){
     return count;
 }
 
+bool MainWindow::isBlocked(int i, int j)
+{
+    int left = i-1;
+    int right = i+1;
+    int up = j+1;
+    int down = j-1;
+    if((left>=0 && left<SQUARE_X && squares[left][j]) &&
+       (right>=0 && right<SQUARE_X && squares[right][j]) &&
+       (up>=0 && up<SQUARE_Y && squares[i][up]) &&
+       (down>=0 && down<SQUARE_Y && squares[i][down]) )
+    {
+        return true;
+    }
+    return false;
+}
+
 //This function redraws the whole playground.
 void MainWindow::redraw()
 {
@@ -70,12 +92,16 @@ void MainWindow::redraw()
   QPointer<QGraphicsScene> scene= new QGraphicsScene;
 
      //ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect() );
+    std::cout << "1" << std::endl;
     if(!cur_image.isNull())
         scene->addPixmap(cur_image.scaled(ui->graphicsView->width(),ui->graphicsView->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
+    std::cout << "2" << std::endl;
     ui->graphicsView->setRenderHints(QPainter::Antialiasing
             | QPainter::SmoothPixmapTransform
             | QPainter::TextAntialiasing);
+    std::cout << "3" << std::endl;
     ui->graphicsView->setScene(scene);
+    std::cout << "4" << std::endl;
       ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
 
 
@@ -96,14 +122,21 @@ void MainWindow::redraw()
 
     qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
-
+    int points = (SQUARE_X*SQUARE_Y/2-(countUsedSquares()/2)*2) - countUsedMiddleSquares();
+    points = points>0 ? points : 1;
+    ui->pointLabel->setText("Punkty:"+QString::number(points));
+    if(points == 1)
+    {
+       ui->pointLabel->setStyleSheet("QLabel {color : red; }");
+       cur_color = Qt::red;
+    }
     for(int i=0;i<SQUARE_X;i++){
         for(int j=0;j<SQUARE_Y;j++){
             if(squares[i][j]){
                 int number = (i+1)+j*SQUARE_X; //Calculate current square number
 
                 //Add a square to our scene
-                ui->graphicsView->scene()->addRect(i*square_width,j*square_height,square_width,square_height,QPen(Qt::black),QBrush(Qt::black));
+                ui->graphicsView->scene()->addRect(i*square_width,j*square_height,square_width,square_height,QPen(cur_color),QBrush(cur_color));
                 QGraphicsItem * cur_rekt=new QGraphicsClickableRectItem(i*square_width,j*square_height,square_width,square_height,number);
 
                 ui->graphicsView->scene()->addItem(cur_rekt);
@@ -114,16 +147,20 @@ void MainWindow::redraw()
                 io->setPos((i*square_width+square_width/2)-50,(j*square_height+square_height/2)-50);
                 io->setPlainText(QString::number(number));
                 io->setScale(5.0);
-                io->setDefaultTextColor(Qt::white);
+                if(isBlocked(i,j))
+                {
+                    io->setDefaultTextColor(Qt::yellow);
+                }
+                else
+                {
+                    io->setDefaultTextColor(Qt::white);
+                }
                 ui->graphicsView->scene()->addItem(io);
             }
         }
     }
-    int points = (SQUARE_X*SQUARE_Y/2-(countUsedSquares()/2)*2) - countUsedMiddleSquares();
-    points = points>0 ? points : 1;
-    ui->pointLabel->setText("Punkty:"+QString::number(points));
-    if(points == 1)
-       ui->pointLabel->setStyleSheet("QLabel {color : red; }");
+
+
     ui->graphicsView->show();
 }
 
@@ -155,6 +192,7 @@ void MainWindow::resizeEvent(QResizeEvent *event){
 
 //This function resets the squares, so they are true or false
 void MainWindow::squareReset(bool type){
+    cur_color = Qt::black;
     for(int i=0;i<SQUARE_X;i++){
         for(int j=0;j<SQUARE_Y;j++){
             squares[i][j]=type;
