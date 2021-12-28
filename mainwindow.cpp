@@ -26,21 +26,14 @@ MainWindow::~MainWindow()
 //and redraw the whole playground.
 void MainWindow::on_pushButton_clicked()
 {
-     std::cout << "5" << std::endl;
     filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.bmp)"));
-     std::cout << "6" << std::endl;
     if(filenames.isEmpty())
         return;
-     std::cout << "7" << std::endl;
     constIterator=filenames.constBegin();
-     std::cout << "8" << std::endl;
     //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
-     std::cout << "9" << std::endl;
     ui->label->setText(*constIterator);
-     std::cout << "10" << std::endl;
     squareReset(true);
-     std::cout << "11" << std::endl;
     redraw();
 }
 
@@ -92,18 +85,13 @@ void MainWindow::redraw()
   QPointer<QGraphicsScene> scene= new QGraphicsScene;
 
      //ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect() );
-    std::cout << "1" << std::endl;
     if(!cur_image.isNull())
         scene->addPixmap(cur_image.scaled(ui->graphicsView->width(),ui->graphicsView->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
-    std::cout << "2" << std::endl;
     ui->graphicsView->setRenderHints(QPainter::Antialiasing
             | QPainter::SmoothPixmapTransform
             | QPainter::TextAntialiasing);
-    std::cout << "3" << std::endl;
     ui->graphicsView->setScene(scene);
-    std::cout << "4" << std::endl;
       ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
-
 
 /*
     QPointer<QGraphicsScene> scene= new QGraphicsScene;
@@ -172,8 +160,6 @@ void MainWindow::on_lineEdit_returnPressed()
 {
     int number = ui->lineEdit->text().toInt(); //number from lineEdit
 
-
-
     if(number>0 && number<=filenames.length()){ //If number is within correct range, disable correct square and redraw.
         constIterator = filenames.begin()+(number-1);
         cur_image= QPixmap(*constIterator);
@@ -222,6 +208,8 @@ void MainWindow::squareTurnOff(int number){
 
 void MainWindow::on_nextButton_clicked()
 {
+    if(filenames.empty())
+           return;
     constIterator = constIterator!=(filenames.constEnd()-1)   ? ++constIterator : filenames.constBegin();
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
@@ -231,6 +219,8 @@ void MainWindow::on_nextButton_clicked()
 
 void MainWindow::on_previousButton_clicked()
 {
+    if(filenames.empty())
+           return;
     constIterator = constIterator!=(filenames.constBegin())   ? --constIterator : filenames.constEnd()-1;
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
