@@ -29,7 +29,7 @@ public:
 private slots:
 
     void on_pushButton_clicked();
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void on_lineEdit_returnPressed();
 
 

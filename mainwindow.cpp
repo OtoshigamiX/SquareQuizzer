@@ -33,6 +33,7 @@ void MainWindow::on_pushButton_clicked()
     //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
+    ui->label->setVisible(false);
     squareReset(true);
     redraw();
 }
@@ -137,7 +138,7 @@ void MainWindow::redraw()
                 io->setScale(5.0);
                 if(isBlocked(i,j))
                 {
-                    io->setDefaultTextColor(Qt::yellow);
+                    io->setDefaultTextColor(Qt::red);
                 }
                 else
                 {
@@ -164,6 +165,7 @@ void MainWindow::on_lineEdit_returnPressed()
         constIterator = filenames.begin()+(number-1);
         cur_image= QPixmap(*constIterator);
         ui->label->setText(*constIterator);
+        ui->label->setVisible(false);
         squareReset(true);
         redraw();
 
@@ -172,7 +174,7 @@ void MainWindow::on_lineEdit_returnPressed()
 }
 
 //On window resize we need to redraw our whole playfield, so the image will be visible.
-void MainWindow::resizeEvent(QResizeEvent *event){
+void MainWindow::resizeEvent(QResizeEvent *){
     redraw();
 }
 
@@ -213,6 +215,7 @@ void MainWindow::on_nextButton_clicked()
     constIterator = constIterator!=(filenames.constEnd()-1)   ? ++constIterator : filenames.constBegin();
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
+    ui->label->setVisible(false);
     squareReset(true);
     redraw();
 }
@@ -224,6 +227,7 @@ void MainWindow::on_previousButton_clicked()
     constIterator = constIterator!=(filenames.constBegin())   ? --constIterator : filenames.constEnd()-1;
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
+    ui->label->setVisible(false);
     squareReset(true);
     redraw();
 }
@@ -231,5 +235,6 @@ void MainWindow::on_previousButton_clicked()
 void MainWindow::on_RevealButton_clicked()
 {
     squareReset(false);
+    ui->label->setVisible(true);
     redraw();
 }
