@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <iostream>
+#include <QPushButton>
 #define SQUARE_X 4
 #define SQUARE_Y 4
 
@@ -16,15 +17,9 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void squareReset(bool type);
-      bool squares[SQUARE_X][SQUARE_Y];
-     void squareTurnOff(int number);
-//    static MainWindow* getMainWindow();
-    void redraw();
+    void squareTurnOff(int number);
+
     ~MainWindow();
-    int countUsedSquares();
-    int countUsedMiddleSquares();
-    bool isBlocked(int i, int j);
 
 private slots:
 
@@ -40,13 +35,20 @@ private slots:
     void on_RevealButton_clicked();
 
 private:
+    bool isMiddle(int i, int j);
+    int countUsedSquares();
+    int countUsedMiddleSquares();
+    bool isBlocked(int i, int j);
+    void squareReset(bool type);
+    void redraw();
+
+    bool squares[SQUARE_X][SQUARE_Y];
     Ui::MainWindow *ui;
 
     QStringList filenames;
     QStringList::const_iterator constIterator;
     QPixmap cur_image;
     QColor cur_color = Qt::black;
-
 };
 
 #endif // MAINWINDOW_H

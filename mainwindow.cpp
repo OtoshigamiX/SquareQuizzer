@@ -4,8 +4,6 @@
 #include <QtWidgets>
 #include <QPointer>
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,7 +19,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 //When we click the Load button, we load the current image to the cur_image variable, reset squares
 //and redraw the whole playground.
 void MainWindow::on_pushButton_clicked()
@@ -30,7 +27,6 @@ void MainWindow::on_pushButton_clicked()
     if(filenames.isEmpty())
         return;
     constIterator=filenames.constBegin();
-    //QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
     cur_image= QPixmap(*constIterator);
     ui->label->setText(*constIterator);
     ui->label->setVisible(false);
@@ -66,15 +62,20 @@ bool MainWindow::isBlocked(int i, int j)
     int right = i+1;
     int up = j+1;
     int down = j-1;
-    if((left>=0 && left<SQUARE_X && squares[left][j]) &&
+    return
+       (left>=0 && left<SQUARE_X && squares[left][j]) &&
        (right>=0 && right<SQUARE_X && squares[right][j]) &&
        (up>=0 && up<SQUARE_Y && squares[i][up]) &&
-       (down>=0 && down<SQUARE_Y && squares[i][down]) )
-    {
-        return true;
-    }
-    return false;
+       (down>=0 && down<SQUARE_Y && squares[i][down]);
 }
+
+bool MainWindow::isMiddle(int i, int j)
+{
+    return i>0 && i<SQUARE_X-1 && j>0 && j<SQUARE_Y-1;
+}
+
+
+static inline int is_odd(int x) { return x & 1; }
 
 //This function redraws the whole playground.
 void MainWindow::redraw()
@@ -85,39 +86,32 @@ void MainWindow::redraw()
   }
   QPointer<QGraphicsScene> scene= new QGraphicsScene;
 
-     //ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect() );
     if(!cur_image.isNull())
         scene->addPixmap(cur_image.scaled(ui->graphicsView->width(),ui->graphicsView->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
     ui->graphicsView->setRenderHints(QPainter::Antialiasing
             | QPainter::SmoothPixmapTransform
             | QPainter::TextAntialiasing);
     ui->graphicsView->setScene(scene);
-      ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
-
-/*
-    QPointer<QGraphicsScene> scene= new QGraphicsScene;
-    if(!cur_image.isNull())
-        scene->addPixmap(cur_image);
-        //scene->addPixmap(cur_image.scaled(ui->graphicsView->scene()->width(),ui->graphicsView->scene()->height(),Qt::KeepAspectRatio ,Qt::SmoothTransformation));
-    ui->graphicsView->setRenderHints(QPainter::Antialiasing
-            | QPainter::SmoothPixmapTransform
-            | QPainter::TextAntialiasing);
-    ui->graphicsView->setScene(scene);
     ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(),Qt::KeepAspectRatio );
-*/
-
-    //qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
-    //qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
 
     qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
-    int points = (SQUARE_X*SQUARE_Y/2-(countUsedSquares()/2)*2) - countUsedMiddleSquares();
+    auto usedSquares = countUsedSquares();
+    auto usedMidSquares = countUsedMiddleSquares();
+    int points = (SQUARE_X*SQUARE_Y/2-(usedSquares/2)*2) - usedMidSquares;
     points = points>0 ? points : 1;
     ui->pointLabel->setText("Punkty:"+QString::number(points));
     if(points == 1)
     {
        ui->pointLabel->setStyleSheet("QLabel {color : red; }");
-       cur_color = Qt::red;
+       cur_color = Qt::darkRed;
+    } else
+    if(is_odd(usedSquares))
+    {
+        cur_color = Qt::darkGray;
+    } else
+    {
+        cur_color = Qt::black;
     }
     for(int i=0;i<SQUARE_X;i++){
         for(int j=0;j<SQUARE_Y;j++){
@@ -126,19 +120,25 @@ void MainWindow::redraw()
 
                 //Add a square to our scene
                 ui->graphicsView->scene()->addRect(i*square_width,j*square_height,square_width,square_height,QPen(cur_color),QBrush(cur_color));
-                QGraphicsItem * cur_rekt=new QGraphicsClickableRectItem(i*square_width,j*square_height,square_width,square_height,number);
+                QGraphicsItem * cur_rekt=new QGraphicsClickableRectItem(i*square_width,j*square_height,square_width,square_height,number,*this);
 
                 ui->graphicsView->scene()->addItem(cur_rekt);
-
 
                 //Add a label to our square
                 QPointer<QGraphicsTextItem> io = new QGraphicsTextItem;
                 io->setPos((i*square_width+square_width/2)-50,(j*square_height+square_height/2)-50);
                 io->setPlainText(QString::number(number));
                 io->setScale(5.0);
-                if(isBlocked(i,j))
+                if(isMiddle(i,j))
                 {
-                    io->setDefaultTextColor(Qt::red);
+                    if(isBlocked(i,j))
+                    {
+                        io->setDefaultTextColor(Qt::red);
+                    }
+                    else
+                    {
+                        io->setDefaultTextColor(Qt::yellow);
+                    }
                 }
                 else
                 {
@@ -153,7 +153,6 @@ void MainWindow::redraw()
     ui->graphicsView->show();
 }
 
-
 //This function activates when we press Return key, when focusted on lineEdit panel.
 //It sets correct square boolean to false and redraws the whole playground, making that square disappear.
 //Also clears the line edit, making it easy to quickly disable squares.
@@ -162,7 +161,7 @@ void MainWindow::on_lineEdit_returnPressed()
     int number = ui->lineEdit->text().toInt(); //number from lineEdit
 
     if(number>0 && number<=filenames.length()){ //If number is within correct range, disable correct square and redraw.
-        constIterator = filenames.begin()+(number-1);
+        constIterator = filenames.cbegin()+(number-1);
         cur_image= QPixmap(*constIterator);
         ui->label->setText(*constIterator);
         ui->label->setVisible(false);
@@ -175,7 +174,10 @@ void MainWindow::on_lineEdit_returnPressed()
 
 //On window resize we need to redraw our whole playfield, so the image will be visible.
 void MainWindow::resizeEvent(QResizeEvent *){
-    redraw();
+    if(!cur_image.isNull())
+    {
+        redraw();
+    }
 }
 
 //This function resets the squares, so they are true or false
@@ -196,17 +198,6 @@ void MainWindow::squareTurnOff(int number){
     squares[number_x][number_y]=false;
     redraw();
 }
-
-//static MainWindow *MainWindow::getMainWindow()
-//{
-//    QWidgetList widgets = qApp->topLevelWidgets();
-//    for (QWidgetList::iterator i = widgets.begin(); i != widgets.end(); ++i)
-//        if ((*i)->objectName() == "MainWindow")
-//            return (MainWindow*) (*i);
-//    return NULL;
-//}
-
-
 
 void MainWindow::on_nextButton_clicked()
 {
