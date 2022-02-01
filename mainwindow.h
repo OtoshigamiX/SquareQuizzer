@@ -41,6 +41,8 @@ private:
     bool isBlocked(int i, int j);
     void squareReset(bool type);
     void redraw();
+    void resetLabels();
+    void updateLabels();
 
     bool squares[SQUARE_X][SQUARE_Y];
     Ui::MainWindow *ui;
@@ -49,6 +51,7 @@ private:
     QStringList::const_iterator constIterator;
     QPixmap cur_image;
     QColor cur_color = Qt::black;
+    QString cur_question = "1";
 };
 
 #endif // MAINWINDOW_H

@@ -41,6 +41,19 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="questionNumLabel">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="previousButton">
         <property name="text">
          <string>&lt;-</string>
@@ -76,7 +89,6 @@
         <property name="font">
          <font>
           <pointsize>12</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -95,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>766</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

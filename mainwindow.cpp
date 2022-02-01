@@ -19,6 +19,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::resetLabels()
+{
+    ui->label->setText(*constIterator);
+    ui->label->setVisible(false);
+    ui->questionNumLabel->setText(cur_question);
+}
+
 //When we click the Load button, we load the current image to the cur_image variable, reset squares
 //and redraw the whole playground.
 void MainWindow::on_pushButton_clicked()
@@ -28,8 +35,7 @@ void MainWindow::on_pushButton_clicked()
         return;
     constIterator=filenames.constBegin();
     cur_image= QPixmap(*constIterator);
-    ui->label->setText(*constIterator);
-    ui->label->setVisible(false);
+    resetLabels();
     squareReset(true);
     redraw();
 }
@@ -160,11 +166,10 @@ void MainWindow::on_lineEdit_returnPressed()
 {
     int number = ui->lineEdit->text().toInt(); //number from lineEdit
 
-    if(number>0 && number<=filenames.length()){ //If number is within correct range, disable correct square and redraw.
+    if(number>0 && number<=filenames.length()){ //If number is within correct range jump to correct question
         constIterator = filenames.cbegin()+(number-1);
         cur_image= QPixmap(*constIterator);
-        ui->label->setText(*constIterator);
-        ui->label->setVisible(false);
+        resetLabels();
         squareReset(true);
         redraw();
 
@@ -199,14 +204,21 @@ void MainWindow::squareTurnOff(int number){
     redraw();
 }
 
+void MainWindow::updateLabels()
+{
+    ui->label->setText(*constIterator);
+    ui->label->setVisible(false);
+    cur_question =  QString::number(constIterator-filenames.constBegin()+1);
+    ui->questionNumLabel->setText(cur_question);
+}
+
 void MainWindow::on_nextButton_clicked()
 {
     if(filenames.empty())
            return;
     constIterator = constIterator!=(filenames.constEnd()-1)   ? ++constIterator : filenames.constBegin();
     cur_image= QPixmap(*constIterator);
-    ui->label->setText(*constIterator);
-    ui->label->setVisible(false);
+    updateLabels();
     squareReset(true);
     redraw();
 }
@@ -217,8 +229,7 @@ void MainWindow::on_previousButton_clicked()
            return;
     constIterator = constIterator!=(filenames.constBegin())   ? --constIterator : filenames.constEnd()-1;
     cur_image= QPixmap(*constIterator);
-    ui->label->setText(*constIterator);
-    ui->label->setVisible(false);
+    updateLabels();
     squareReset(true);
     redraw();
 }
