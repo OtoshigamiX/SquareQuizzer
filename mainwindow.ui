@@ -75,6 +75,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="altPointBox">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Plik:</string>

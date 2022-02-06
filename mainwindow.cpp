@@ -104,7 +104,8 @@ void MainWindow::redraw()
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
     auto usedSquares = countUsedSquares();
     auto usedMidSquares = countUsedMiddleSquares();
-    int points = (SQUARE_X*SQUARE_Y/2-(usedSquares/2)*2) - usedMidSquares;
+    int points = isAltScoringEnabled ?  SQUARE_X*SQUARE_Y - usedSquares:
+                                       (SQUARE_X*SQUARE_Y/2-(usedSquares/2)*2) - usedMidSquares;
     points = points>0 ? points : 1;
     ui->pointLabel->setText("Punkty:"+QString::number(points));
     if(points == 1)
@@ -112,7 +113,7 @@ void MainWindow::redraw()
        ui->pointLabel->setStyleSheet("QLabel {color : red; }");
        cur_color = Qt::darkRed;
     } else
-    if(is_odd(usedSquares))
+    if(is_odd(usedSquares) && not isAltScoringEnabled)
     {
         cur_color = Qt::darkGray;
     } else
@@ -143,7 +144,8 @@ void MainWindow::redraw()
                     }
                     else
                     {
-                        io->setDefaultTextColor(Qt::yellow);
+                        isAltScoringEnabled ? io->setDefaultTextColor(Qt::white) :
+                                              io->setDefaultTextColor(Qt::yellow);
                     }
                 }
                 else
@@ -240,3 +242,11 @@ void MainWindow::on_RevealButton_clicked()
     ui->label->setVisible(true);
     redraw();
 }
+
+void MainWindow::on_altPointBox_stateChanged(int state)
+{
+    isAltScoringEnabled = state;
+    squareReset(true);
+    redraw();
+}
+
