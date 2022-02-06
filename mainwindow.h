@@ -34,6 +34,8 @@ private slots:
 
     void on_RevealButton_clicked();
 
+    void on_altPointBox_stateChanged(int arg1);
+
 private:
     bool isMiddle(int i, int j);
     int countUsedSquares();
@@ -52,6 +54,7 @@ private:
     QPixmap cur_image;
     QColor cur_color = Qt::black;
     QString cur_question = "1";
+    bool isAltScoringEnabled{false};
 };
 
 #endif // MAINWINDOW_H
