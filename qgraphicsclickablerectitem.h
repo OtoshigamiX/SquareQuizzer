@@ -9,7 +9,7 @@ public:
     QGraphicsClickableRectItem(qreal x, qreal y, qreal w, qreal h,int n, MainWindow& main): QGraphicsRectItem(x,y,w,h),number(n), main(main){}
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *);
 
 private:
     int number;

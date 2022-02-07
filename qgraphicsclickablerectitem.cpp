@@ -4,7 +4,7 @@
 #include <QApplication>
 
 
-void QGraphicsClickableRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void QGraphicsClickableRectItem::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
     main.squareTurnOff(number);
 }
