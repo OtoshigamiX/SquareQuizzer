@@ -6,6 +6,7 @@
 #include <QPushButton>
 #define SQUARE_X 4
 #define SQUARE_Y 4
+#define HALF_OF_SQUARES SQUARE_X*SQUARE_Y/2
 
 namespace Ui {
 class MainWindow;

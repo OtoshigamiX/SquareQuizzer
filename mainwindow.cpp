@@ -104,8 +104,8 @@ void MainWindow::redraw()
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
     auto usedSquares = countUsedSquares();
     auto usedMidSquares = countUsedMiddleSquares();
-    int points = isAltScoringEnabled ?  SQUARE_X*SQUARE_Y - usedSquares:
-                                       (SQUARE_X*SQUARE_Y/2-(usedSquares/2)*2) - usedMidSquares;
+    int points = isAltScoringEnabled ?  HALF_OF_SQUARES+1 - usedSquares:
+                                       (HALF_OF_SQUARES-(usedSquares/2)*2) - usedMidSquares;
     points = points>0 ? points : 1;
     ui->pointLabel->setText("Punkty:"+QString::number(points));
     if(points == 1)
