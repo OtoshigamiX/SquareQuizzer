@@ -250,3 +250,16 @@ void MainWindow::on_altPointBox_stateChanged(int state)
     redraw();
 }
 
+void MainWindow::changeScoring(int state)
+{
+    isAltScoringEnabled = state;
+    squareReset(true);
+    redraw();
+}
+
+
+void MainWindow::on_configButton_clicked()
+{
+    cw.show();
+}
+

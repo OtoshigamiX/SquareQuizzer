@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <iostream>
 #include <QPushButton>
+#include "configurationwindow.h"
 #define SQUARE_X 4
 #define SQUARE_Y 4
 #define HALF_OF_SQUARES SQUARE_X*SQUARE_Y/2
@@ -19,6 +20,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     void squareTurnOff(int number);
+    void changeScoring(int arg1);
 
     ~MainWindow();
 
@@ -36,6 +38,8 @@ private slots:
     void on_RevealButton_clicked();
 
     void on_altPointBox_stateChanged(int arg1);
+
+    void on_configButton_clicked();
 
 private:
     bool isMiddle(int i, int j);
@@ -56,6 +60,8 @@ private:
     QColor cur_color = Qt::black;
     QString cur_question = "1";
     bool isAltScoringEnabled{false};
+
+    ConfigurationWindow cw{this};
 };
 
 #endif // MAINWINDOW_H
