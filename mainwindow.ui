@@ -41,6 +41,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="configButton">
+        <property name="text">
+         <string>Konfiguracja</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="questionNumLabel">
         <property name="font">
          <font>
@@ -71,13 +78,6 @@
        <widget class="QPushButton" name="RevealButton">
         <property name="text">
          <string>Odkryj</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="altPointBox">
-        <property name="text">
-         <string/>
         </property>
        </widget>
       </item>

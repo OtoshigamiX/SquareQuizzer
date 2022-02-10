@@ -14,10 +14,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    configurationwindow.cpp \
         mainwindow.cpp \
     qgraphicsclickablerectitem.cpp
 
 HEADERS  += mainwindow.h \
+    configurationwindow.h \
     qgraphicsclickablerectitem.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    configurationwindow.ui
