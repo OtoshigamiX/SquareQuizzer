@@ -243,20 +243,12 @@ void MainWindow::on_RevealButton_clicked()
     redraw();
 }
 
-void MainWindow::on_altPointBox_stateChanged(int state)
-{
-    isAltScoringEnabled = state;
-    squareReset(true);
-    redraw();
-}
-
 void MainWindow::changeScoring(int state)
 {
     isAltScoringEnabled = state;
     squareReset(true);
     redraw();
 }
-
 
 void MainWindow::on_configButton_clicked()
 {

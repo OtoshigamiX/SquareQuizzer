@@ -30,14 +30,11 @@ private slots:
     void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void on_lineEdit_returnPressed();
 
-
     void on_nextButton_clicked();
 
     void on_previousButton_clicked();
 
     void on_RevealButton_clicked();
-
-    void on_altPointBox_stateChanged(int arg1);
 
     void on_configButton_clicked();
 
