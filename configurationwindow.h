@@ -18,6 +18,11 @@ public:
 private slots:
     void on_checkBox_stateChanged(int);
 
+    void on_subPrevButton_clicked();
+
+    void on_subNextButton_clicked();
+
+    void on_revealLineEdit_returnPressed();
 private:
     Ui::ConfigurationWindow *ui;
     QWidget *parent;
