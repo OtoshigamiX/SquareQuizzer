@@ -162,8 +162,8 @@ void MainWindow::redraw()
 }
 
 //This function activates when we press Return key, when focusted on lineEdit panel.
-//It sets correct square boolean to false and redraws the whole playground, making that square disappear.
-//Also clears the line edit, making it easy to quickly disable squares.
+//It jumps to correct question.
+//Also clears the line edit.
 void MainWindow::on_lineEdit_returnPressed()
 {
     int number = ui->lineEdit->text().toInt(); //number from lineEdit
@@ -174,7 +174,6 @@ void MainWindow::on_lineEdit_returnPressed()
         resetLabels();
         squareReset(true);
         redraw();
-
     }
     ui->lineEdit->clear(); //Clear lineEdit
 }
@@ -199,6 +198,8 @@ void MainWindow::squareReset(bool type){
 }
 
 void MainWindow::squareTurnOff(int number){
+    if(number <=0 || number > SQUARE_X*SQUARE_Y)
+        return;
     int number_x=(number-1)%SQUARE_X; //x coordinate taken from number.
     int number_y=(number-1)/SQUARE_X; //y coordinate taken from number.
 
@@ -214,7 +215,7 @@ void MainWindow::updateLabels()
     ui->questionNumLabel->setText(cur_question);
 }
 
-void MainWindow::on_nextButton_clicked()
+void MainWindow::nextImage()
 {
     if(filenames.empty())
            return;
@@ -225,7 +226,7 @@ void MainWindow::on_nextButton_clicked()
     redraw();
 }
 
-void MainWindow::on_previousButton_clicked()
+void MainWindow::previousImage()
 {
     if(filenames.empty())
            return;
@@ -234,6 +235,16 @@ void MainWindow::on_previousButton_clicked()
     updateLabels();
     squareReset(true);
     redraw();
+}
+
+void MainWindow::on_nextButton_clicked()
+{
+    nextImage();
+}
+
+void MainWindow::on_previousButton_clicked()
+{
+    previousImage();
 }
 
 void MainWindow::on_RevealButton_clicked()

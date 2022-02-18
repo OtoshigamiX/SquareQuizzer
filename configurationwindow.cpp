@@ -20,3 +20,21 @@ void ConfigurationWindow::on_checkBox_stateChanged(int arg1)
     ((MainWindow*)parent)->changeScoring(arg1);
 }
 
+
+void ConfigurationWindow::on_subPrevButton_clicked()
+{
+    ((MainWindow*)parent)->previousImage();
+}
+
+void ConfigurationWindow::on_subNextButton_clicked()
+{
+    ((MainWindow*)parent)->nextImage();
+}
+
+void ConfigurationWindow::on_revealLineEdit_returnPressed()
+{
+    int number = ui->revealLineEdit->text().toInt();
+    ((MainWindow*)parent)->squareTurnOff(number);
+     ui->revealLineEdit->clear();
+}
+
