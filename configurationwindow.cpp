@@ -38,3 +38,9 @@ void ConfigurationWindow::on_revealLineEdit_returnPressed()
      ui->revealLineEdit->clear();
 }
 
+
+void ConfigurationWindow::on_subRevealButton_clicked()
+{
+    ((MainWindow*)parent)->revealAllTiles();
+}
+

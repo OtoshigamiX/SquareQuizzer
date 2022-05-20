@@ -247,11 +247,16 @@ void MainWindow::on_previousButton_clicked()
     previousImage();
 }
 
-void MainWindow::on_RevealButton_clicked()
+void MainWindow::revealAllTiles()
 {
     squareReset(false);
     ui->label->setVisible(true);
     redraw();
+}
+
+void MainWindow::on_RevealButton_clicked()
+{
+    revealAllTiles();
 }
 
 void MainWindow::changeScoring(int state)

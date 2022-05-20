@@ -23,6 +23,8 @@ private slots:
     void on_subNextButton_clicked();
 
     void on_revealLineEdit_returnPressed();
+    void on_subRevealButton_clicked();
+
 private:
     Ui::ConfigurationWindow *ui;
     QWidget *parent;

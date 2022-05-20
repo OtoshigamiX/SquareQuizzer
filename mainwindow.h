@@ -23,6 +23,7 @@ public:
     void changeScoring(int arg1);
     void nextImage();
     void previousImage();
+    void revealAllTiles();
 
     ~MainWindow();
 
