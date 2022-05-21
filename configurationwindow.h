@@ -25,6 +25,8 @@ private slots:
     void on_revealLineEdit_returnPressed();
     void on_subRevealButton_clicked();
 
+    void on_timerLineEdit_returnPressed();
+
 private:
     Ui::ConfigurationWindow *ui;
     QWidget *parent;

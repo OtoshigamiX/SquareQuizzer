@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <iostream>
 #include <QPushButton>
+#include <QTimer>
+#include <QTime>
+#include <memory>
 #include "configurationwindow.h"
 #define SQUARE_X 4
 #define SQUARE_Y 4
@@ -24,6 +27,9 @@ public:
     void nextImage();
     void previousImage();
     void revealAllTiles();
+    void timerUpdate();
+    void startTimer(unsigned secs);
+    void resetTimer();
 
     ~MainWindow();
 
@@ -60,6 +66,9 @@ private:
     QColor cur_color = Qt::black;
     QString cur_question = "1";
     bool isAltScoringEnabled{false};
+    QTimer* timer;
+    QTime time;
+    const QTime zerotime = QTime(0,0);
 
     ConfigurationWindow cw{this};
 };

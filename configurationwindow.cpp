@@ -20,7 +20,6 @@ void ConfigurationWindow::on_checkBox_stateChanged(int arg1)
     ((MainWindow*)parent)->changeScoring(arg1);
 }
 
-
 void ConfigurationWindow::on_subPrevButton_clicked()
 {
     ((MainWindow*)parent)->previousImage();
@@ -38,9 +37,16 @@ void ConfigurationWindow::on_revealLineEdit_returnPressed()
      ui->revealLineEdit->clear();
 }
 
-
 void ConfigurationWindow::on_subRevealButton_clicked()
 {
     ((MainWindow*)parent)->revealAllTiles();
+}
+
+
+void ConfigurationWindow::on_timerLineEdit_returnPressed()
+{
+    int seconds = ui->timerLineEdit->text().toInt();
+    ((MainWindow*)parent)->startTimer(seconds);
+     ui->timerLineEdit->clear();
 }
 

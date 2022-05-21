@@ -3,6 +3,7 @@
 #include "qgraphicsclickablerectitem.h"
 #include <QtWidgets>
 #include <QPointer>
+#include <chrono>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,11 +13,41 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Sets up the squares (every square is on by default)
     squareReset(true);
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::timerUpdate));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::timerUpdate()
+{
+    if(time == zerotime)
+    {
+        timer->stop();
+        ui->timerLabel->setStyleSheet("QLabel {color : red; }");
+        return;
+    }
+    time = time.addSecs(-1);
+    ui->timerLabel->setText(time.toString("mm:ss"));
+}
+
+void MainWindow::resetTimer()
+{
+    ui->timerLabel->setStyleSheet("QLabel {color : black; }");
+    time = zerotime;
+    ui->timerLabel->setText(time.toString("mm:ss"));
+    timer->stop();
+}
+
+void MainWindow::startTimer(unsigned secs)
+{
+    resetTimer();
+    time = time.addSecs(secs);
+    ui->timerLabel->setText(time.toString("mm:ss"));
+    timer->start(1000);
 }
 
 void MainWindow::resetLabels()
@@ -213,6 +244,7 @@ void MainWindow::updateLabels()
     ui->label->setVisible(false);
     cur_question =  QString::number(constIterator-filenames.constBegin()+1);
     ui->questionNumLabel->setText(cur_question);
+    resetTimer();
 }
 
 void MainWindow::nextImage()
