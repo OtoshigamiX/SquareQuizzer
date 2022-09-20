@@ -50,3 +50,10 @@ void ConfigurationWindow::on_timerLineEdit_returnPressed()
      ui->timerLineEdit->clear();
 }
 
+
+void ConfigurationWindow::on_autoTimerLineEdit_textChanged(const QString &arg1)
+{
+    if(auto secs = arg1.toInt(); secs > 0)
+        ((MainWindow*)parent)->auto_timer_value = secs;
+}
+

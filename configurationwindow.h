@@ -27,6 +27,8 @@ private slots:
 
     void on_timerLineEdit_returnPressed();
 
+    void on_autoTimerLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::ConfigurationWindow *ui;
     QWidget *parent;

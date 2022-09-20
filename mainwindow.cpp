@@ -235,6 +235,7 @@ void MainWindow::squareTurnOff(int number){
     int number_y=(number-1)/SQUARE_X; //y coordinate taken from number.
 
     squares[number_x][number_y]=false;
+    startTimer(auto_timer_value);
     redraw();
 }
 

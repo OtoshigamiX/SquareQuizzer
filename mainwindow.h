@@ -32,7 +32,7 @@ public:
     void resetTimer();
 
     ~MainWindow();
-
+    unsigned auto_timer_value = 30u;
 private slots:
 
     void on_pushButton_clicked();
