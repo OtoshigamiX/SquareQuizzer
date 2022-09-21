@@ -61,7 +61,7 @@ void MainWindow::resetLabels()
 //and redraw the whole playground.
 void MainWindow::on_pushButton_clicked()
 {
-    filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.bmp)"));
+    filenames = QFileDialog::getOpenFileNames(this,tr("Select Images"),"",tr("Image Files (*.png *.jpg *.jpeg *.bmp)"));
     if(filenames.isEmpty())
         return;
     constIterator=filenames.constBegin();
@@ -111,7 +111,6 @@ bool MainWindow::isMiddle(int i, int j)
     return i>0 && i<SQUARE_X-1 && j>0 && j<SQUARE_Y-1;
 }
 
-
 static inline int is_odd(int x) { return x & 1; }
 
 //This function redraws the whole playground.
@@ -133,24 +132,7 @@ void MainWindow::redraw()
 
     qreal square_width=ui->graphicsView->scene()->width()/SQUARE_X;
     qreal square_height=ui->graphicsView->scene()->height()/SQUARE_Y;
-    auto usedSquares = countUsedSquares();
-    auto usedMidSquares = countUsedMiddleSquares();
-    int points = isAltScoringEnabled ?  HALF_OF_SQUARES+1 - usedSquares:
-                                       (HALF_OF_SQUARES-(usedSquares/2)*2) - usedMidSquares;
-    points = points>0 ? points : 1;
-    ui->pointLabel->setText("Punkty:"+QString::number(points));
-    if(points == 1)
-    {
-       ui->pointLabel->setStyleSheet("QLabel {color : red; }");
-       cur_color = Qt::darkRed;
-    } else
-    if(is_odd(usedSquares) && not isAltScoringEnabled)
-    {
-        cur_color = Qt::darkGray;
-    } else
-    {
-        cur_color = Qt::black;
-    }
+
     for(int i=0;i<SQUARE_X;i++){
         for(int j=0;j<SQUARE_Y;j++){
             if(squares[i][j]){
@@ -192,6 +174,36 @@ void MainWindow::redraw()
     ui->graphicsView->show();
 }
 
+void MainWindow::calculatePoints()
+{
+    auto usedSquares = countUsedSquares();
+    auto usedMidSquares = countUsedMiddleSquares();
+    points = isAltScoringEnabled ?  HALF_OF_SQUARES+1 - usedSquares:
+                                    (HALF_OF_SQUARES-(usedSquares/2)*2) - usedMidSquares;
+    points = points>0 ? points : 1;
+    ui->pointLabel->setText("Punkty:"+QString::number(points));
+    if(points == 1)
+    {
+       ui->pointLabel->setStyleSheet("QLabel {color : red; }");
+       cur_color = Qt::darkRed;
+    } else
+    if(is_odd(usedSquares) && not isAltScoringEnabled)
+    {
+        cur_color = Qt::darkGray;
+    } else
+    {
+        cur_color = Qt::black;
+    }
+}
+
+void MainWindow::calculateHalfPoints()
+{
+    points = points/2;
+    ui->pointLabel->setText("Punkty:"+QString::number(points));
+    ui->pointLabel->setStyleSheet("QLabel {color : red; }");
+    cur_color = Qt::darkRed;
+}
+
 //This function activates when we press Return key, when focusted on lineEdit panel.
 //It jumps to correct question.
 //Also clears the line edit.
@@ -226,6 +238,13 @@ void MainWindow::squareReset(bool type){
         }
     }
     ui->pointLabel->setStyleSheet("QLabel {color : black; }");
+    if(type)
+    {
+        calculatePoints();
+    }else
+    {
+        calculateHalfPoints();
+    }
 }
 
 void MainWindow::squareTurnOff(int number){
@@ -236,6 +255,7 @@ void MainWindow::squareTurnOff(int number){
 
     squares[number_x][number_y]=false;
     startTimer(auto_timer_value);
+    calculatePoints();
     redraw();
 }
 

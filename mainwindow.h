@@ -56,6 +56,8 @@ private:
     void redraw();
     void resetLabels();
     void updateLabels();
+    void calculatePoints();
+    void calculateHalfPoints();
 
     bool squares[SQUARE_X][SQUARE_Y];
     Ui::MainWindow *ui;
@@ -69,6 +71,7 @@ private:
     QTimer* timer;
     QTime time;
     const QTime zerotime = QTime(0,0);
+    int points = 8;
 
     ConfigurationWindow cw{this};
 };
